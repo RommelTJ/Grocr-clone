@@ -51,7 +51,13 @@ class GroceryListTableViewController: UITableViewController {
         super.viewDidAppear(animated)
         
         ref.observeEventType(.Value, withBlock: { (snapshot) -> Void in
-            print(snapshot.value)
+            var newItems = [GroceryItem]()
+            for item in snapshot.children {
+                let groceryItem = GroceryItem(snapshot: item as! FDataSnapshot)
+                newItems.append(groceryItem)
+            }
+            self.items = newItems
+            self.tableView.reloadData()
             }) { (error) -> Void in
                 print(error.description)
         }
