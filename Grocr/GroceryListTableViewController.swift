@@ -115,10 +115,10 @@ class GroceryListTableViewController: UITableViewController {
         let alert = UIAlertController(title: "Grocery Item", message: "Add an Item", preferredStyle: .Alert)
         
         let saveAction = UIAlertAction(title: "Save", style: .Default) { (action: UIAlertAction!) -> Void in
-            let textField = alert.textFields![0] as UITextField
-            let groceryItem = GroceryItem(name: textField.text!, addedByUser: self.user.email, completed: false)
-            self.items.append(groceryItem)
-            self.tableView.reloadData()
+                let textField = alert.textFields![0] as UITextField
+                let groceryItem = GroceryItem(name: textField.text!, addedByUser: self.user.email, completed: false)
+                let groceryItemRef = self.ref.childByAppendingPath(textField.text!.lowercaseString)
+                groceryItemRef.setValue(groceryItem.toAnyObject())
         }
     
         let cancelAction = UIAlertAction(title: "Cancel", style: .Default) {
