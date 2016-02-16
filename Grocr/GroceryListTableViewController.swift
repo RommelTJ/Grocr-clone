@@ -50,7 +50,7 @@ class GroceryListTableViewController: UITableViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        ref.observeEventType(.Value, withBlock: { (snapshot) -> Void in
+        ref.queryOrderedByChild("completed").observeEventType(.Value, withBlock: { (snapshot) -> Void in
             var newItems = [GroceryItem]()
             for item in snapshot.children {
                 let groceryItem = GroceryItem(snapshot: item as! FDataSnapshot)
