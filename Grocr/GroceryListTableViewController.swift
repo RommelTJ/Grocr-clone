@@ -49,6 +49,12 @@ class GroceryListTableViewController: UITableViewController {
   
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        
+        ref.observeEventType(.Value, withBlock: { (snapshot) -> Void in
+            print(snapshot.value)
+            }) { (error) -> Void in
+                print(error.description)
+        }
     }
   
     override func viewDidDisappear(animated: Bool) {
