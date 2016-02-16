@@ -105,8 +105,7 @@ class GroceryListTableViewController: UITableViewController {
     
         // Determine whether the cell is checked
         toggleCellCheckbox(cell, isCompleted: toggledCompletion)
-        groceryItem.completed = toggledCompletion
-        tableView.reloadData()
+        groceryItem.ref?.updateChildValues(["completed" : toggledCompletion])
     }
   
     func toggleCellCheckbox(cell: UITableViewCell, isCompleted: Bool) {
