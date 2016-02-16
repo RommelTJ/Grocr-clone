@@ -100,7 +100,7 @@ class GroceryListTableViewController: UITableViewController {
   
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let cell = tableView.cellForRowAtIndexPath(indexPath)!
-        var groceryItem = items[indexPath.row]
+        let groceryItem = items[indexPath.row]
         let toggledCompletion = !groceryItem.completed
     
         // Determine whether the cell is checked
