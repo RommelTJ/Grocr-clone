@@ -24,17 +24,42 @@ import UIKit
 
 class OnlineUsersTableViewController: UITableViewController {
 
-  // MARK: Constants
-  let UserCell = "UserCell"
+    // MARK: Constants
+    let UserCell = "UserCell"
   
-  // MARK: Properties
-  var currentUsers: [String] = [String]()
+    // MARK: Properties
+    var currentUsers: [String] = [String]()
+    let usersRef = Firebase(url: "https://REDACTED.firebaseio.com/online")
   
-  // MARK: UIViewController Lifecycle
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    currentUsers.append("hungry@person.food")
-  }
+    // MARK: UIViewController Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        currentUsers.append("hungry@person.food")
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        //Check for users online
+        usersRef.observeEventType(.ChildAdded) { (snapshot: FDataSnapshot!) -> Void in
+            self.currentUsers.append(snapshot.value as! String)
+            let row = self.currentUsers.count - 1
+            let indexPath = NSIndexPath(forRow: row, inSection: 0)
+            self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Top)
+        }
+        
+        //Check for users offline
+        usersRef.observeEventType(.ChildRemoved) { (snapshot: FDataSnapshot!) -> Void in
+            let emailToFind: String! = snapshot.value as! String
+            for (index, email) in self.currentUsers.enumerate() {
+                if email == emailToFind {
+                    let indexPath = NSIndexPath(forRow: index, inSection: 0)
+                    self.currentUsers.removeAtIndex(index)
+                    self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                }
+            }
+        }
+    }
 
   // MARK: UITableView Delegate methods
   

@@ -28,6 +28,7 @@ class GroceryListTableViewController: UITableViewController {
   
     // MARK: Properties
     let ref = Firebase(url: "https://REDACTED.firebaseio.com/grocery-items")
+    let usersRef = Firebase(url: "https://REDACTED.firebaseio.com/online")
     var items = [GroceryItem]()
     var user: User!
     var userCountBarButtonItem: UIBarButtonItem!
@@ -60,6 +61,23 @@ class GroceryListTableViewController: UITableViewController {
             self.tableView.reloadData()
             }) { (error) -> Void in
                 print(error.description)
+        }
+        
+        ref.observeAuthEventWithBlock { (auth: FAuthData!) -> Void in
+            if auth != nil {
+                self.user = User(authData: auth)
+                let currentUserRef = self.usersRef.childByAppendingPath(self.user.uid)
+                currentUserRef.setValue(self.user.email)
+                currentUserRef.onDisconnectRemoveValue()
+            }
+        }
+        
+        usersRef.observeEventType(.Value) { (snapshot: FDataSnapshot!) -> Void in
+            if snapshot.exists() {
+                self.userCountBarButtonItem.title = snapshot.childrenCount.description
+            } else {
+                self.userCountBarButtonItem.title = "0"
+            }
         }
     }
   
