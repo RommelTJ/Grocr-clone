@@ -38,10 +38,23 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        ref.observeAuthEventWithBlock { (auth: FAuthData!) -> Void in
+            if auth != nil {
+                self.performSegueWithIdentifier(self.LoginToList, sender: nil)
+            }
+        }
+    }
   
     // MARK: Actions
     @IBAction func loginDidTouch(sender: AnyObject) {
-        performSegueWithIdentifier(LoginToList, sender: nil)
+        ref.authUser(textFieldLoginEmail.text, password: textFieldLoginPassword.text) { (error: NSError!, auth: FAuthData!) -> Void in
+            if error != nil {
+                print("Error during authentication: \(error)")
+            }
+        }
     }
 
     @IBAction func signUpDidTouch(sender: AnyObject) {
